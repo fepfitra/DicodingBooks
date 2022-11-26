@@ -1,20 +1,80 @@
 function main() {
+  const baseUrl = 'https://books-api.dicoding.dev';
 
   const getBook = () => {
     // tuliskan kode di sini!
+    fetch(`${baseUrl}/list`)
+      .then(response => response.json())
+      .then(responseJson => {
+        
+        if (responseJson.error) {
+          showResponseMessage(responseJson.message);
+        } else {
+          renderAllBooks(responseJson.books);
+        }
+      })
+      .catch(error => {
+        showResponseMessage(error);
+      });
   };
 
 
   const insertBook = (book) => {
     // tuliskan kode di sini!
+    fetch(`${baseUrl}/add`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Auth-Token': '12345'
+      },
+      body: JSON.stringify(book)
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        showResponseMessage(responseJson.message);
+        getBook();
+      })
+      .catch(error => {
+        showResponseMessage(error);
+      });
   };
 
   const updateBook = (book) => {
     // tuliskan kode di sini!
+    fetch(`${baseUrl}/edit/${book.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Auth-Token': '12345'
+      },
+      body: JSON.stringify(book)
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        showResponseMessage(responseJson.message);
+        getBook();
+      })
+      .catch(error => {
+        showResponseMessage(error);
+      });
   };
 
   const removeBook = (bookId) => {
     // tuliskan kode di sini!
+    fetch(`${baseUrl}/delete/${bookId}`, {
+      method: 'DELETE',
+      headers: {
+        'X-Auth-Token': '12345'
+      }
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        showResponseMessage(responseJson.message);
+        getBook();
+      })
+      .catch(error => {
+        showResponseMessage(error);
+      });
   };
 
 
